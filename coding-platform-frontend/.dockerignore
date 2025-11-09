@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+Dockerfile
+README.md
+npm-debug.log
+yarn-debug.log
+.env
+.env.local
+.env.production
