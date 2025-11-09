@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Environment files
+**/.env
+**/.env.local
+**/.env.production
+**/.env.development
+**/.env.test
+
+# Node / Next artifacts
+**/node_modules
+**/.next
+**/out
+
+# Gradle / Kotlin artifacts
+**/.gradle
+**/build
+
+# Logs
+*.log
+
+# Misc
+.idea
+.vscode
+Thumbs.db
