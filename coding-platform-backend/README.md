@@ -16,25 +16,30 @@
 cp .env.example .env
 # 필요 시 .env 파일 값 수정
 
-# 2. 전체 스택 실행
+# 2. 코드 실행 워크스페이스 + SMTP 환경 변수 준비
+mkdir -p executions
+# .env 파일 안의 SPRING_MAIL_* 값을 Gmail 앱 비밀번호 기준으로 맞춰주세요.
+
+# 3. 전체 스택 실행 (Backend + Frontend + DB + Monitoring)
 docker compose up -d --build
 
-# 3. 헬스 체크
+# 4. 헬스 체크
 curl http://localhost:8080/health
 
-# 4. 로그 확인 (옵션)
+# 5. 로그 확인 (옵션)
 docker compose logs -f backend
 ```
 
 ### 기본 접속 정보
 - Backend API: `http://localhost:8080`
+- Frontend UI (Docker): `http://localhost:${FRONTEND_PORT}` (기본 `3100`, Grafana와 포트 충돌 방지를 위해 분리)
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
 - Prometheus: `http://localhost:9090`
 - Grafana: `http://localhost:3000` (ID/PW: `admin`/`admin`)
 
 ## 주요 기능
-- 회원 가입 / 로그인 / 프로필 수정 (JWT 인증)
+- 회원 가입 / 로그인 / 이메일 인증 / 프로필 수정 (JWT 인증)
 - 문제 관리 (목록, 상세)
 - 코드 제출 및 비동기 평가 (문제별 테스트 통과율 기반 점수)
 - 즉시 코드 실행 API (테스트용)
@@ -105,3 +110,6 @@ coding-platform-backend/
 - 컨테이너는 `no-new-privileges`, 캡 능력 제거, 메모리/CPU 제한, 네트워크 차단 등 보안 설정이 적용됩니다.
 - 실행 결과와 피드백은 PostgreSQL에 저장되며, Redis는 향후 캐시/큐 용도로 확장할 수 있습니다.
 - 테스트 점수 규칙과 샘플 테스트 시나리오는 `docs/TEST_SCORING.md`, 전체 Docker 실행 흐름은 `docs/CONTAINER_EXECUTION.md`, API별 요청/응답 예시는 `docs/API_TEST_EXAMPLES.md`에 정리되어 있습니다.
+- `.env` 파일에 정의한 `DOCKER_HOST_WORKSPACE`(기본 `./executions`) 경로는 컨테이너와 공유되므로 git에 올리지 마시고, 필요 시 정기적으로 디스크를 정리하세요.
+- 동일 compose 파일에서 `frontend` 서비스도 함께 기동되며, `.env`의 `FRONTEND_PUBLIC_API_BASE_URL`과 `FRONTEND_PORT`로 연결 대상을 제어할 수 있습니다.
+- 회원가입은 `/api/auth/register/code` → 메일 인증 코드 입력 → `/api/auth/register` 순으로 진행됩니다. Gmail SMTP(앱 비밀번호)를 `SPRING_MAIL_*` 변수에 넣어야 발송이 정상 동작합니다.

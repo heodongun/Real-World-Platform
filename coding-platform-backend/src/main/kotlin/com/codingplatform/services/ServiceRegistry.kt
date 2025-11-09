@@ -2,12 +2,15 @@ package com.codingplatform.services
 
 import com.codingplatform.database.DatabaseConfig
 import com.codingplatform.database.DatabaseFactory
+import com.codingplatform.database.tables.EmailVerifications
 import com.codingplatform.database.tables.Executions
 import com.codingplatform.database.tables.Problems
 import com.codingplatform.database.tables.Submissions
 import com.codingplatform.database.tables.Users
 import com.codingplatform.executor.DockerManager
 import com.codingplatform.utils.JwtConfig
+import com.codingplatform.services.email.EmailConfig
+import com.codingplatform.services.email.EmailService
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.config.ApplicationConfig
 import io.lettuce.core.RedisClient
@@ -31,6 +34,8 @@ class ServiceRegistry(
     val dockerManager: DockerManager
     val testRunnerService: TestRunnerService
     val dockerExecutorService: DockerExecutorService
+    val emailService: EmailService
+    val emailVerificationService: EmailVerificationService
     val authService: AuthService
     val userService: UserService
     val problemService: ProblemService
@@ -49,7 +54,7 @@ class ServiceRegistry(
 
         databaseFactory = DatabaseFactory(
             config = dbConfig,
-            tables = listOf(Users, Problems, Submissions, Executions)
+            tables = listOf(Users, Problems, Submissions, Executions, EmailVerifications)
         ).also { it.init() }
 
         jwtConfig = JwtConfig(
@@ -70,7 +75,10 @@ class ServiceRegistry(
         testRunnerService = TestRunnerService()
         dockerExecutorService = DockerExecutorService(dockerManager, testRunnerService)
 
-        authService = AuthService(databaseFactory, jwtConfig)
+        emailService = EmailService(loadEmailConfig())
+        emailVerificationService = EmailVerificationService(databaseFactory, emailService)
+
+        authService = AuthService(databaseFactory, jwtConfig, emailVerificationService)
         problemService = ProblemService(databaseFactory).also { service ->
             runBlocking { service.seedDefaults() }
         }
@@ -97,5 +105,39 @@ class ServiceRegistry(
         val port = value("database.port", "POSTGRES_PORT") ?: "5432"
         val db = value("database.name", "POSTGRES_DB") ?: "coding_platform"
         return "jdbc:postgresql://$host:$port/$db"
+    }
+
+    private fun loadEmailConfig(): EmailConfig {
+        fun configValue(path: String, envKey: String): String? = value(path, envKey)
+
+        val host = configValue("spring.mail.host", "SPRING_MAIL_HOST")
+            ?: configValue("mail.host", "SMTP_HOST")
+            ?: error("SMTP host is required")
+        val port = (configValue("spring.mail.port", "SPRING_MAIL_PORT")
+            ?: configValue("mail.port", "SMTP_PORT")
+            ?: "587").toInt()
+        val username = configValue("spring.mail.username", "SPRING_MAIL_USERNAME")
+            ?: configValue("mail.username", "SMTP_USERNAME")
+            ?: error("SMTP username is required")
+        val password = configValue("spring.mail.password", "SPRING_MAIL_PASSWORD")
+            ?: configValue("mail.password", "SMTP_PASSWORD")
+            ?: error("SMTP password is required")
+        val fromEmail = configValue("mail.from", "SMTP_FROM_EMAIL")
+            ?: username
+        val fromName = configValue("mail.fromName", "SMTP_FROM_NAME")
+            ?: "Coding Platform"
+        val startTls = (configValue("spring.mail.properties.mail.smtp.starttls.enable", "SPRING_MAIL_STARTTLS_ENABLE")
+            ?: configValue("mail.starttls", "SMTP_STARTTLS_ENABLE")
+            ?: "true").toBoolean()
+
+        return EmailConfig(
+            host = host,
+            port = port,
+            username = username,
+            password = password,
+            fromEmail = fromEmail,
+            fromName = fromName,
+            useStartTls = startTls
+        )
     }
 }

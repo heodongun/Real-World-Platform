@@ -181,6 +181,9 @@ class ProblemService(
         )
 
         databaseFactory.dbQuery {
+            if (!Problems.selectAll().empty()) {
+                return@dbQuery
+            }
             samples.forEach { sample ->
                 Problems.insertIgnore { row ->
                     row[Problems.id] = UUID.randomUUID()

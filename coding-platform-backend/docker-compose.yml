@@ -49,12 +49,13 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       APP_ENV: ${APP_ENV}
-      DOCKER_HOST_WORKSPACE: /Users/heodongun/Desktop/Real-World Coding Challenge Platform/coding-platform-backend/executions
+      EXECUTION_WORKSPACE: ${EXECUTION_WORKSPACE}
+      DOCKER_HOST_WORKSPACE: ${DOCKER_HOST_WORKSPACE:-./executions}
       EXECUTION_TIMEOUT: 180
       MAX_MEMORY_MB: 2048
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /Users/heodongun/Desktop/Real-World Coding Challenge Platform/coding-platform-backend/executions:/tmp/executions
+      - ${DOCKER_HOST_WORKSPACE:-./executions}:${EXECUTION_WORKSPACE:-/tmp/executions}
     depends_on:
       postgres:
         condition: service_healthy
@@ -100,6 +101,27 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: admin
     depends_on:
       prometheus:
+        condition: service_started
+    networks:
+      - coding-platform-network
+
+  frontend:
+    build:
+      context: ../coding-platform-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${FRONTEND_PUBLIC_API_BASE_URL:-http://localhost:8080}
+        SERVER_API_BASE_URL: ${FRONTEND_SERVER_API_BASE_URL:-http://backend:8080}
+    container_name: coding-platform-frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${FRONTEND_PUBLIC_API_BASE_URL:-http://localhost:8080}
+      SERVER_API_BASE_URL: ${FRONTEND_SERVER_API_BASE_URL:-http://backend:8080}
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "${FRONTEND_PORT:-3100}:3000"
+    depends_on:
+      backend:
         condition: service_started
     networks:
       - coding-platform-network

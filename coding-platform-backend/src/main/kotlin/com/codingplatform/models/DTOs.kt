@@ -13,13 +13,19 @@ import com.codingplatform.utils.UUIDSerializer
 data class RegisterRequest(
     val email: String,
     val password: String,
-    val name: String
+    val name: String,
+    val verificationCode: String
 )
 
 @Serializable
 data class LoginRequest(
     val email: String,
     val password: String
+)
+
+@Serializable
+data class VerificationCodeRequest(
+    val email: String
 )
 
 @Serializable

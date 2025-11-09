@@ -19,11 +19,24 @@ import java.util.UUID
 
 class AuthService(
     private val databaseFactory: DatabaseFactory,
-    private val jwtConfig: JwtConfig
+    private val jwtConfig: JwtConfig,
+    private val emailVerificationService: EmailVerificationService
 ) {
 
-    suspend fun register(email: String, password: String, name: String, role: UserRole = UserRole.USER): Pair<User, String> {
+    suspend fun requestVerificationCode(email: String) {
         require(findByEmail(email) == null) { "이미 사용 중인 이메일입니다." }
+        emailVerificationService.requestCode(email)
+    }
+
+    suspend fun register(
+        email: String,
+        password: String,
+        name: String,
+        verificationCode: String,
+        role: UserRole = UserRole.USER
+    ): Pair<User, String> {
+        require(findByEmail(email) == null) { "이미 사용 중인 이메일입니다." }
+        emailVerificationService.consumeCode(email, verificationCode)
 
         val user = databaseFactory.dbQuery {
             val now = Instant.now()

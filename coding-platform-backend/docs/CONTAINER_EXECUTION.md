@@ -36,7 +36,7 @@ docker build -t coding-platform-python:latest src/main/resources/docker/python
 | 변수 | 기본값 | 설명 |
 | --- | --- | --- |
 | `EXECUTION_WORKSPACE` | `/tmp/executions` | 컨테이너 내부 작업 디렉터리 |
-| `DOCKER_HOST_WORKSPACE` | `<repo>/executions` | 호스트에 마운트되는 경로 (docker compose에서 `volumes`로 연결) |
+| `DOCKER_HOST_WORKSPACE` | `./executions` | 호스트에 마운트되는 경로 (`docker-compose.yml`이 있는 `coding-platform-backend/` 기준 상대 경로) |
 | `EXECUTION_TIMEOUT` | `180` | 한 제출당 최대 실행 시간(초) |
 | `MAX_MEMORY_MB` | `2048` | 컨테이너 메모리 제한 |
 | `MAX_CPU_SHARES` | `512` | 컨테이너 CPU shares (상대적 가중치) |
