@@ -78,7 +78,6 @@ src/
 
 ## 기타
 
-- 기본 관리자 계정: `admin@example.com / AdminPass123!`
 - Tailwind CSS 4 + 커스텀 UI 컴포넌트로 스타일을 구성했습니다.
 - 모든 API 호출은 `NEXT_PUBLIC_API_BASE_URL`을 기준으로 수행하므로 배포 시 환경변수만 교체하면 됩니다.
 

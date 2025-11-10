@@ -50,7 +50,7 @@ export default async function HomePage() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/register"
-                className="rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-indigo-500/20"
+                className="rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110"
               >
                 회원가입
               </Link>

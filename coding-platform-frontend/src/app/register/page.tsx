@@ -17,9 +17,8 @@ export default function RegisterPage() {
           결과를 즉시 받아볼 수 있습니다.
         </p>
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
-          • 관리자(`admin@example.com / AdminPass123!`) 계정으로 로그인하면 새 문제를 API로 등록할 수
-          있습니다.
-          <br />• 일반 사용자로는 제출, 실행, 대시보드 조회 기능이 제공됩니다.
+          • 이메일 인증을 마쳐야 제출, 실행, 대시보드 기능이 모두 활성화됩니다.
+          <br />• 운영 권한은 별도 초대가 필요하며, 일반 계정은 제출/실행 기능에 집중하세요.
         </div>
       </div>
       <div className="flex-1">

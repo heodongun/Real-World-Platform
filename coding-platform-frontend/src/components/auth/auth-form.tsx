@@ -140,7 +140,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
                 onClick={handleSendCode}
                 loading={codeLoading}
               >
-                코드 발송
+                코드발송
               </Button>
             </div>
             {codeMessage && (
