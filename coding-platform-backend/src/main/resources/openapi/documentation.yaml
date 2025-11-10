@@ -6,7 +6,7 @@ info:
     JWT 인증이 필요한 엔드포인트는 `Authorization: Bearer <token>` 헤더를 포함해야 합니다.
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://legendheodongun.com:8080
 paths:
   /health:
     get:
