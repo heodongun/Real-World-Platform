@@ -125,6 +125,8 @@ services:
         condition: service_started
     networks:
       - coding-platform-network
+    profiles:
+      - frontend
 
 volumes:
   postgres_data:
