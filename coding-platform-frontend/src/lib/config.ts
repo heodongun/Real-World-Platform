@@ -1,10 +1,10 @@
 const SERVER_API_BASE_URL =
   process.env.SERVER_API_BASE_URL ??
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  'http://backend:8080';
+  'http://legendheodongun.com:8080';
 
 const BROWSER_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080';
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://legendheodongun.com:8080';
 
 export const resolveApiBaseUrl = () =>
   typeof window === 'undefined' ? SERVER_API_BASE_URL : BROWSER_API_BASE_URL;

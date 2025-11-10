@@ -16,11 +16,11 @@
    cp .env.example .env               # Docker/배포용 (NEXT_PUBLIC_* 값 정의)
    cp .env.local.example .env.local   # 로컬 개발용
    ```
-   `.env`는 Docker/배포 시 백엔드 컨테이너(`SERVER_API_BASE_URL=http://backend:8080`)와 브라우저 접근용 주소(`NEXT_PUBLIC_API_BASE_URL=http://localhost:8080`)를 모두 정의합니다.
+   `.env`는 Docker/배포 시 백엔드 API(`SERVER_API_BASE_URL=http://legendheodongun.com:8080`)와 브라우저 접근용 주소(`NEXT_PUBLIC_API_BASE_URL=http://legendheodongun.com:8080`)를 모두 정의합니다. 로컬 백엔드를 직접 붙이고 싶다면 해당 값을 `http://localhost:8080` 등으로 교체하세요.
    `.env.local` 예시:
    ```
-   NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-   SERVER_API_BASE_URL=http://localhost:8080
+   NEXT_PUBLIC_API_BASE_URL=http://legendheodongun.com:8080
+   SERVER_API_BASE_URL=http://legendheodongun.com:8080
    ```
 
 ## 설치 및 실행
@@ -87,8 +87,8 @@ src/
 ```bash
 # 환경변수 준비 (이미 했다면 생략)
 cp .env.example .env
-# 호스트에서 백엔드를 띄우고 있다면 NEXT_PUBLIC_API_BASE_URL은 브라우저에서 접근 가능한 주소(예: http://localhost:8080),
-# SERVER_API_BASE_URL은 컨테이너 내부에서 백엔드에 접근 가능한 주소(예: http://backend:8080 또는 host.docker.internal)로 맞춰주세요.
+# 기본값은 http://legendheodongun.com:8080 이며, 로컬에서 백엔드를 띄우는 경우
+# NEXT_PUBLIC_API_BASE_URL / SERVER_API_BASE_URL 값을 http://localhost:8080 등으로 바꿔주세요.
 
 # 이미지 빌드
 docker build -t coding-platform-frontend .
