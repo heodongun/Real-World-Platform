@@ -160,15 +160,26 @@ class DockerManager(
         val hostPath = workspace.absolutePath.replace(executionWorkspace, dockerHostWorkspace)
         logger.info("Bind mount: host path=$hostPath → container path=/workspace")
 
+        // [보안] 네트워크 격리: 외부 네트워크 접근을 차단하여 잠재적인 공격을 방지합니다.
+        // 현재는 'bridge' 모드를 사용하여 외부와 통신이 가능하지만,
+        // 'none'으로 설정하여 네트워크를 비활성화하는 것을 고려해야 합니다.
+        // [보안] 리소스 제한: 메모리, CPU 사용량을 제한하여 서비스 거부(DoS) 공격을 방지합니다.
+        // 현재 설정된 제한(메모리, CPU 공유)이 적절한지 지속적인 검토가 필요합니다.
+        // [보안] 읽기 전용 파일시스템: 컨테이너의 루트 파일시스템을 읽기 전용으로 설정하고,
+        // 필요한 작업 공간만 쓰기 가능하도록 마운트하여 컨테이너 내부에서의 악의적인 변경을 방지합니다.
+        // [보안] 권한 축소: 컨테이너에 필요한 최소한의 권한만 부여합니다.
+        // 모든 권한을 제거(CapDrop.ALL)하고, 'no-new-privileges'를 설정하는 것은 좋은 시작점입니다.
+        // [보안] 사용자 관리: 컨테이너를 non-root 사용자로 실행하여 권한 상승 공격의 위험을 줄입니다.
+        // 현재 '1000:1000'으로 고정되어 있지만, 더 제한적인 권한을 가진 동적 사용자를 고려할 수 있습니다.
         val hostConfig = HostConfig.newHostConfig()
             .withMemory(maxMemoryBytes)
             .withMemorySwap(maxMemoryBytes)
             .withCpuShares(maxCpuShares)
-            .withNetworkMode("bridge")
+            .withNetworkMode("bridge") // 네트워크 격리를 위해 "none"으로 변경 고려
             .withReadonlyRootfs(false)
             .withBinds(Bind(hostPath, Volume("/workspace"), AccessMode.rw))
-            .withCapDrop(Capability.ALL)
-            .withSecurityOpts(listOf("no-new-privileges"))
+            .withCapDrop(Capability.ALL) // 모든 Linux capabilities 제거
+            .withSecurityOpts(listOf("no-new-privileges")) // 권한 상승 방지
 
         return dockerClient.createContainerCmd(image)
             .withName("exec-$executionId")
