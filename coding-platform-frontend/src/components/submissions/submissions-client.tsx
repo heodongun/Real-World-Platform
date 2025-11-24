@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '@/components/providers/auth-provider';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { fetchSubmissions } from '@/lib/api';
 import { Submission } from '@/lib/types';
 import { formatDateTime } from '@/lib/utils';
@@ -53,41 +54,54 @@ export const SubmissionsClient = () => {
         </Button>
       </div>
       {error && (
-        <p className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
-          {error}
-        </p>
+        <div className="mt-4 flex items-center justify-between rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+          <p>{error}</p>
+          <Button size="sm" variant="secondary" onClick={load}>
+            다시 시도
+          </Button>
+        </div>
       )}
-      <div className="mt-6 overflow-x-auto rounded-3xl border border-white/5">
-        <table className="min-w-full text-left text-sm text-slate-200">
-          <thead className="bg-white/5 text-xs uppercase text-slate-400">
-            <tr>
-              <th className="px-4 py-3">제출 ID</th>
-              <th className="px-4 py-3">문제 ID</th>
-              <th className="px-4 py-3">상태</th>
-              <th className="px-4 py-3">점수</th>
-              <th className="px-4 py-3">업데이트</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submissions.map((submission) => (
-              <tr key={submission.id} className="border-t border-white/5">
-                <td className="px-4 py-3 font-mono text-xs text-indigo-200">{submission.id}</td>
-                <td className="px-4 py-3 font-mono text-xs text-slate-400">{submission.problemId}</td>
-                <td className="px-4 py-3 text-xs text-white">{submission.status}</td>
-                <td className="px-4 py-3">{submission.score}</td>
-                <td className="px-4 py-3 text-slate-400">{formatDateTime(submission.updatedAt)}</td>
-              </tr>
-            ))}
-            {!submissions.length && (
+      {refreshing && !submissions.length ? (
+        <div className="flex justify-center py-20">
+          <Spinner className="h-10 w-10 text-white" />
+        </div>
+      ) : (
+        <div className="mt-6 overflow-x-auto rounded-3xl border border-white/5">
+          <table className="min-w-full text-left text-sm text-slate-200">
+            <thead className="bg-white/5 text-xs uppercase text-slate-400">
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
-                  제출 기록이 없습니다.
-                </td>
+                <th className="px-4 py-3">제출 ID</th>
+                <th className="px-4 py-3">문제 ID</th>
+                <th className="px-4 py-3">상태</th>
+                <th className="px-4 py-3">점수</th>
+                <th className="px-4 py-3">업데이트</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {submissions.map((submission) => (
+                <tr key={submission.id} className="border-t border-white/5">
+                  <td className="px-4 py-3 font-mono text-xs text-indigo-200">{submission.id}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-slate-400">
+                    {submission.problemId}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-white">{submission.status}</td>
+                  <td className="px-4 py-3">{submission.score}</td>
+                  <td className="px-4 py-3 text-slate-400">
+                    {formatDateTime(submission.updatedAt)}
+                  </td>
+                </tr>
+              ))}
+              {!submissions.length && (
+                <tr>
+                  <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                    제출 기록이 없습니다.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

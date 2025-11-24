@@ -16,9 +16,9 @@ const statLabelMap: Array<{ key: keyof DashboardStats; label: string }> = [
 
 export default async function DashboardPage() {
   const [stats, leaderboard, health] = await Promise.all([
-    fetchDashboardStats().catch(() => null),
-    fetchLeaderboard().catch(() => []),
-    fetchHealth().catch(() => ({ status: 'UNREACHABLE' })),
+    fetchDashboardStats(),
+    fetchLeaderboard(),
+    fetchHealth(),
   ]);
 
   return (
