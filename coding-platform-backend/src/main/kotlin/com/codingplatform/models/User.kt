@@ -10,15 +10,15 @@ import com.codingplatform.utils.InstantSerializer
 import com.codingplatform.utils.UUIDSerializer
 
 /**
- * Represents a user of the coding platform.
+ * 코딩 플랫폼의 사용자를 나타냅니다.
  *
- * @property id The unique identifier for the user.
- * @property email The user's email address. Must be unique.
- * @property name The user's name.
- * @property role The user's role, which determines their permissions.
- * @property createdAt The timestamp when the user was created.
- * @property updatedAt The timestamp when the user was last updated.
- * @property lastLoginAt The timestamp of the user's last login. Can be null if the user has never logged in.
+ * @property id 사용자의 고유 식별자.
+ * @property email 사용자의 이메일 주소. 고유해야 합니다.
+ * @property name 사용자의 이름.
+ * @property role 사용자의 역할. 권한을 결정합니다.
+ * @property createdAt 사용자가 생성된 타임스탬프.
+ * @property updatedAt 사용자가 마지막으로 업데이트된 타임스탬프.
+ * @property lastLoginAt 사용자의 마지막 로그인 타임스탬프. 사용자가 로그인한 적이 없으면 null일 수 있습니다.
  */
 @Serializable
 data class User(
@@ -32,11 +32,11 @@ data class User(
 )
 
 /**
- * Defines the roles a user can have.
+ * 사용자가 가질 수 있는 역할을 정의합니다.
  */
 enum class UserRole {
-    /** An administrator with full access to the system. */
+    /** 시스템에 대한 모든 권한을 가진 관리자. */
     ADMIN,
-    /** A standard user with access to solving problems and viewing submissions. */
+    /** 문제 풀기 및 제출물 보기에 대한 액세스 권한이 있는 표준 사용자. */
     USER
 }
