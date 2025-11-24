@@ -29,8 +29,8 @@ export default async function ProblemDetailPage({ params }: Props) {
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-12">
-      <div className="rounded-[36px] border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-transparent p-8">
+    <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <div className="rounded-[36px] border border-white/10 bg-gradient-to-br from-white/5 via-transparent to-transparent p-4 sm:p-8">
         <div className="flex flex-wrap items-center gap-4">
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold ${difficultyBadgeColor(
@@ -43,7 +43,7 @@ export default async function ProblemDetailPage({ params }: Props) {
             {problem.language}
           </span>
         </div>
-        <h1 className="mt-4 text-4xl font-semibold text-white">{problem.title}</h1>
+        <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">{problem.title}</h1>
         <p className="mt-2 text-sm text-slate-400">slug / id: {problem.slug}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {problem.tags.map((tag) => (
@@ -55,7 +55,7 @@ export default async function ProblemDetailPage({ params }: Props) {
             </span>
           ))}
         </div>
-        <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/40 p-6 text-sm leading-relaxed text-slate-100">
+        <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/40 p-4 text-sm leading-relaxed text-slate-100 sm:p-6">
           <pre className="whitespace-pre-wrap text-sm text-slate-100">{problem.description}</pre>
         </div>
       </div>

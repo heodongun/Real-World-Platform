@@ -20,14 +20,16 @@ export const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold text-white">
           <div className="rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 px-2 py-1 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40">
             CODE
           </div>
-          <span className="text-lg tracking-tight text-white">Real-World Platform</span>
+          <span className="hidden text-lg tracking-tight text-white sm:inline">
+            Real-World Platform
+          </span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-slate-100 sm:flex">
+        <nav className="flex items-center gap-2 text-sm text-slate-100 sm:gap-6">
           {links.map((link) => {
             const isActive =
               link.href === '/'

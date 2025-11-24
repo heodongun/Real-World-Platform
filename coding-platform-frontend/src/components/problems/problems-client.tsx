@@ -30,19 +30,19 @@ export const ProblemsClient = ({ problems }: Props) => {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-4 rounded-3xl border border-white/10 bg-white/5 p-4">
+      <div className="flex flex-col flex-wrap items-center gap-4 rounded-3xl border border-white/10 bg-white/5 p-4 md:flex-row">
         <input
           placeholder="문제 검색 (제목, 설명)"
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
-          className="flex-1 rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-2 text-sm text-white placeholder:text-slate-400 focus:border-indigo-300 focus:outline-none"
+          className="w-full flex-1 rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-2 text-sm text-white placeholder:text-slate-400 focus:border-indigo-300 focus:outline-none"
         />
         <select
           value={difficulty}
           onChange={(event) =>
             setDifficulty(event.target.value as (typeof difficultyFilters)[number])
           }
-          className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-indigo-300 focus:outline-none"
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-indigo-300 focus:outline-none md:w-auto"
         >
           {difficultyFilters.map((d) => (
             <option key={d} value={d} className="bg-slate-900 text-white">
