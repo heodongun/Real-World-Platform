@@ -18,12 +18,25 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.delete
 import java.util.UUID
 
+/**
+ * Configures routes for managing problems.
+ * @param problemService The service for handling problem-related logic.
+ */
 fun Route.configureProblemRoutes(problemService: ProblemService) {
+    /**
+     * Endpoint to list all problems.
+     * @return 200 OK with a list of problems.
+     */
     get("/api/problems") {
         val problems = problemService.listProblems().map { it.toResponse() }
         call.respond(problems)
     }
 
+    /**
+     * Endpoint to get a problem by its ID or slug.
+     * @param id The ID or slug of the problem.
+     * @return 200 OK with the problem details, or 404 Not Found if the problem doesn't exist.
+     */
     get("/api/problems/{id}") {
         val idParam = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
         val problem = runCatching { UUID.fromString(idParam) }
@@ -39,6 +52,11 @@ fun Route.configureProblemRoutes(problemService: ProblemService) {
     }
 
     authenticate("auth-jwt") {
+        /**
+         * Endpoint to create a new problem. Requires admin privileges.
+         * @param CreateProblemRequest The request body containing the details of the new problem.
+         * @return 201 Created with the created problem's details, or 403 Forbidden if the user is not an admin.
+         */
         post("/api/problems") {
             if (!call.isAdmin()) {
                 return@post call.respond(HttpStatusCode.Forbidden, mapOf("error" to "ADMIN 권한이 필요합니다."))
@@ -49,6 +67,12 @@ fun Route.configureProblemRoutes(problemService: ProblemService) {
             call.respond(HttpStatusCode.Created, created.toResponse())
         }
 
+        /**
+         * Endpoint to update an existing problem. Requires admin privileges.
+         * @param id The ID of the problem to update.
+         * @param UpdateProblemRequest The request body containing the updated problem details.
+         * @return 200 OK with the updated problem's details, 404 Not Found if the problem doesn't exist, or 403 Forbidden if the user is not an admin.
+         */
         put("/api/problems/{id}") {
             if (!call.isAdmin()) {
                 return@put call.respond(HttpStatusCode.Forbidden, mapOf("error" to "ADMIN 권한이 필요합니다."))
@@ -68,6 +92,11 @@ fun Route.configureProblemRoutes(problemService: ProblemService) {
             }
         }
 
+        /**
+         * Endpoint to delete a problem. Requires admin privileges.
+         * @param id The ID of the problem to delete.
+         * @return 204 No Content if the problem was deleted successfully, 404 Not Found if the problem doesn't exist, or 403 Forbidden if the user is not an admin.
+         */
         delete("/api/problems/{id}") {
             if (!call.isAdmin()) {
                 return@delete call.respond(HttpStatusCode.Forbidden, mapOf("error" to "ADMIN 권한이 필요합니다."))
@@ -88,6 +117,10 @@ fun Route.configureProblemRoutes(problemService: ProblemService) {
     }
 }
 
+/**
+ * Converts a Problem object to a ProblemResponse object, hiding the test files.
+ * @return A ProblemResponse object.
+ */
 private fun Problem.toResponse(): ProblemResponse =
     ProblemResponse(
         id = id,

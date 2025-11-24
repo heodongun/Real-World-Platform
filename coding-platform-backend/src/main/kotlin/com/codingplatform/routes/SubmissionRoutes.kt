@@ -17,11 +17,21 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import java.util.UUID
 
+/**
+ * Configures routes for handling submissions.
+ * @param submissionService The service for handling submission logic.
+ * @param problemService The service for handling problem-related logic.
+ */
 fun Route.configureSubmissionRoutes(
     submissionService: SubmissionService,
     problemService: ProblemService
 ) {
     authenticate("auth-jwt") {
+        /**
+         * Endpoint to create a new submission.
+         * @param SubmissionRequest The request body containing the problem ID and code.
+         * @return 202 Accepted with a message indicating that the submission is being processed.
+         */
         post("/api/submissions") {
             val userId = call.userId() ?: return@post call.respond(HttpStatusCode.Unauthorized)
             val request = call.receive<SubmissionRequest>()
@@ -45,12 +55,21 @@ fun Route.configureSubmissionRoutes(
             )
         }
 
+        /**
+         * Endpoint to list all submissions for the current user.
+         * @return 200 OK with a list of submissions.
+         */
         get("/api/submissions") {
             val userId = call.userId() ?: return@get call.respond(HttpStatusCode.Unauthorized)
             val submissions = submissionService.listSubmissions(userId)
             call.respond(submissions)
         }
 
+        /**
+         * Endpoint to get a specific submission by its ID.
+         * @param id The ID of the submission.
+         * @return 200 OK with the submission details, or 404 Not Found if the submission doesn't exist, or 403 Forbidden if the submission does not belong to the current user.
+         */
         get("/api/submissions/{id}") {
             val userId = call.userId() ?: return@get call.respond(HttpStatusCode.Unauthorized)
             val idParam = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
