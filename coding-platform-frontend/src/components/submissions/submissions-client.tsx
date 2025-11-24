@@ -62,20 +62,24 @@ export const SubmissionsClient = () => {
           <thead className="bg-white/5 text-xs uppercase text-slate-400">
             <tr>
               <th className="px-4 py-3">제출 ID</th>
-              <th className="px-4 py-3">문제 ID</th>
+              <th className="hidden px-4 py-3 md:table-cell">문제 ID</th>
               <th className="px-4 py-3">상태</th>
               <th className="px-4 py-3">점수</th>
-              <th className="px-4 py-3">업데이트</th>
+              <th className="hidden px-4 py-3 md:table-cell">업데이트</th>
             </tr>
           </thead>
           <tbody>
             {submissions.map((submission) => (
               <tr key={submission.id} className="border-t border-white/5">
                 <td className="px-4 py-3 font-mono text-xs text-indigo-200">{submission.id}</td>
-                <td className="px-4 py-3 font-mono text-xs text-slate-400">{submission.problemId}</td>
+                <td className="hidden px-4 py-3 font-mono text-xs text-slate-400 md:table-cell">
+                  {submission.problemId}
+                </td>
                 <td className="px-4 py-3 text-xs text-white">{submission.status}</td>
                 <td className="px-4 py-3">{submission.score}</td>
-                <td className="px-4 py-3 text-slate-400">{formatDateTime(submission.updatedAt)}</td>
+                <td className="hidden px-4 py-3 text-slate-400 md:table-cell">
+                  {formatDateTime(submission.updatedAt)}
+                </td>
               </tr>
             ))}
             {!submissions.length && (
