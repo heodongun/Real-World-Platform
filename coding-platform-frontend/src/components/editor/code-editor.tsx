@@ -41,6 +41,8 @@ export const CodeEditor = ({ value, language, onChange, readOnly, height = 420 }
           readOnly,
           scrollBeyondLastLine: false,
           tabSize: 2,
+          ariaLabel: 'Code Editor',
+          accessibilitySupport: 'on',
         }}
         onChange={(val) => onChange?.(val ?? '')}
       />
