@@ -20,3 +20,82 @@ Use Conventional Commits (`feat(executor): cache docker layers`) with ≤72 char
 
 ## Security & Configuration Tips
 Never commit populated `.env*` files or anything under `executions/`. Executor Dockerfiles must retain `no-new-privileges`, CPU/memory caps, and isolated volumes. When editing monitoring, keep `monitoring/prometheus.yml` and the bundled Grafana dashboards in sync so alerts continue to reflect deployed endpoints.
+
+## Environment Configuration
+
+This section contains a consolidated `.env.example` template for both the backend and frontend services.
+
+### Consolidated `.env.example` Template
+
+```
+# =================================================================
+# Common .env.example Template
+#
+# This file contains all environment variables for both the backend
+# and frontend. Copy this content into a new .env file in the
+# root directory and fill in the values. Then, follow the setup
+# instructions in the README.md to create the individual .env
+# files for each service.
+# =================================================================
+
+# -----------------------------------------------------------------
+# Backend Configuration (`coding-platform-backend/.env`)
+# -----------------------------------------------------------------
+
+# PostgreSQL
+POSTGRES_DB=coding_platform
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=secure_password_change_this
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# JWT
+JWT_SECRET=your-very-secure-256-bit-secret-key-change-this-in-production
+JWT_ISSUER=coding-platform
+JWT_AUDIENCE=coding-platform-users
+JWT_REALM=coding-platform-auth
+JWT_EXP_SECONDS=21600
+
+# Application
+APP_PORT=8080
+APP_ENV=development
+
+# Execution Sandbox
+EXECUTION_TIMEOUT=30
+MAX_MEMORY_MB=512
+MAX_CPU_SHARES=512
+EXECUTION_WORKSPACE=/tmp/executions
+DOCKER_HOST_WORKSPACE=./executions
+
+# SMTP / Email
+SPRING_MAIL_HOST=smtp.your-email-provider.com
+SPRING_MAIL_PORT=587
+SPRING_MAIL_USERNAME=your-email@example.com
+SPRING_MAIL_PASSWORD=your-app-password
+SPRING_MAIL_STARTTLS_ENABLE=true
+SMTP_FROM_EMAIL=noreply@example.com
+SMTP_FROM_NAME=Coding Platform
+
+# -----------------------------------------------------------------
+# Frontend Configuration (`coding-platform-frontend/.env`)
+# -----------------------------------------------------------------
+
+# These are for the Next.js application.
+# For local development, you can override these in .env.local
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+SERVER_API_BASE_URL=http://localhost:8080
+
+# -----------------------------------------------------------------
+# Docker Compose Configuration (used in `coding-platform-backend/docker-compose.yml`)
+# -----------------------------------------------------------------
+
+# These variables are used by docker-compose to configure the frontend service.
+# They are passed to the frontend container as NEXT_PUBLIC_API_BASE_URL and SERVER_API_BASE_URL.
+FRONTEND_PUBLIC_API_BASE_URL=http://localhost:8080
+FRONTEND_SERVER_API_BASE_URL=http://backend:8080
+FRONTEND_PORT=3100
+```
